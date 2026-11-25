@@ -1,0 +1,806 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARYAN | Workout Plan</title>
+
+<style>
+:root {
+  --bg: #101310;
+  --card: #1b201c;
+  --card2: #242b25;
+  --green: #b7f36b;
+  --text: #f2f5ef;
+  --muted: #a2ada3;
+  --border: #303a31;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Arial, sans-serif;
+  line-height: 1.5;
+}
+
+header {
+  padding: 24px 6%;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.logo {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.logo span { color: var(--green); }
+
+header small { color: var(--muted); }
+
+main {
+  max-width: 1100px;
+  margin: auto;
+  padding: 32px 20px 60px;
+}
+
+h1 {
+  font-size: clamp(30px, 5vw, 46px);
+  line-height: 1.1;
+  margin: 12px 0;
+}
+
+h2 { margin-top: 0; }
+
+p { color: var(--muted); }
+
+.hero {
+  background: linear-gradient(120deg, #273528, #18201a);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 30px;
+  margin-bottom: 24px;
+}
+
+.tag {
+  display: inline-block;
+  color: var(--green);
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.stat {
+  background: #111711;
+  border: 1px solid var(--border);
+  padding: 16px;
+  border-radius: 12px;
+}
+
+.stat strong {
+  display: block;
+  font-size: 24px;
+  color: var(--green);
+}
+
+.stat span {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.section-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin: 32px 0 16px;
+}
+
+.section-title h2 { margin: 0; }
+
+.week {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.day-button {
+  background: var(--card);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 4px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.day-button strong {
+  display: block;
+  font-size: 18px;
+}
+
+.day-button small {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.day-button.active {
+  background: var(--green);
+  color: #172012;
+  border-color: var(--green);
+}
+
+.day-button.active small { color: #34452b; }
+
+.day-button.done {
+  border-color: var(--green);
+}
+
+.day-button.done strong::after {
+  content: " ✓";
+}
+
+.workout {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 24px;
+}
+
+.workout-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.workout-header h2 { margin-bottom: 4px; }
+
+.progress-label {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.progress-track {
+  height: 7px;
+  background: #303a31;
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 12px 0 20px;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0;
+  background: var(--green);
+  transition: width .2s;
+}
+
+.exercise {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.exercise:last-child { border-bottom: 0; }
+
+.exercise input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--green);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.exercise-info { flex: 1; }
+
+.exercise-info strong {
+  display: block;
+  font-size: 15px;
+}
+
+.exercise-info small {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.exercise input:checked + .exercise-info strong {
+  text-decoration: line-through;
+  color: var(--muted);
+}
+
+.sets {
+  color: var(--green);
+  background: #293329;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+button {
+  font: inherit;
+}
+
+.action {
+  background: var(--green);
+  color: #172012;
+  border: 0;
+  border-radius: 10px;
+  padding: 11px 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.action.secondary {
+  background: var(--card2);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.notes {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-top: 24px;
+}
+
+
+/* Daily routine layout */
+#dailyList {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  width: 100%;
+}
+
+/* Exercise cards */
+#dailyList .exercise {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  padding: 12px;
+  background: #242b25;
+  border: 1px solid #303a31;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+/* Exercise names */
+#dailyList .exercise-info {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+#dailyList .exercise-info strong {
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+/* Mobile layout */
+@media (max-width: 480px) {
+  #dailyList {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+.note {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px;
+}
+
+.note h3 { margin-top: 0; }
+
+.note ul {
+  padding-left: 20px;
+  color: var(--muted);
+}
+
+.note li { margin-bottom: 8px; }
+
+.timer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.timer strong {
+  font-size: 30px;
+  color: var(--green);
+  font-variant-numeric: tabular-nums;
+}
+
+.timer button {
+  background: var(--card2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+footer {
+  text-align: center;
+  padding: 24px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+@media (max-width: 600px) {
+  header { padding: 18px; }
+  main { padding: 20px 14px 40px; }
+  .hero { padding: 22px; }
+  .stats { gap: 8px; }
+  .stat { padding: 12px 8px; }
+  .stat strong { font-size: 20px; }
+  .week { gap: 5px; }
+  .day-button { padding: 12px 2px; }
+  .day-button small { font-size: 9px; }
+  .workout { padding: 18px; }
+  .notes { grid-template-columns: 1fr; }
+  .sets { font-size: 11px; padding: 5px 7px; }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">LIFETIME <span>FITNESS</span></div>
+  <small>Train. Recover. Repeat.</small>
+</header>
+
+<main>
+
+<section class="hero">
+  <span class="tag">YOUR PERSONAL TRAINING PLAN</span>
+  <h1>Build a physique.<br>Keep it for life.</h1>
+  <p>A sustainable 6-day workout split focused on muscle growth, recovery, and consistency.</p>
+
+  <div class="stats">
+    <div class="stat">
+      <strong>6</strong>
+      <span>Training days</span>
+    </div>
+    <div class="stat">
+      <strong>1</strong>
+      <span>Rest day</span>
+    </div>
+    <div class="stat">
+      <strong>45–65</strong>
+      <span>Minutes per gym day</span>
+    </div>
+  </div>
+</section>
+
+<div class="section-title">
+  <h2>Your weekly split</h2>
+</div>
+
+<div class="week" id="week"></div>
+
+<section class="workout">
+  <div class="workout-header">
+    <div>
+      <span class="tag" id="dayNumber"></span>
+      <h2 id="workoutTitle"></h2>
+      <div class="progress-label" id="workoutSubtitle"></div>
+    </div>
+  </div>
+
+  <div class="progress-label" id="progressText">0 of 0 exercises completed</div>
+  <div class="progress-track">
+    <div class="progress-fill" id="progressFill"></div>
+  </div>
+
+  <div id="exerciseList"></div>
+
+  <div class="controls">
+    <button class="action" id="completeButton">Complete workout</button>
+    <button class="action secondary" id="resetButton">Reset day</button>
+  </div>
+</section>
+
+<div class="notes">
+  <section class="note">
+    <h3>Daily bodyweight routine</h3>
+    <p>Your personal exercises, separate from the gym plan.</p>
+    <div id="dailyList"></div>
+  </section>
+
+  <section class="note">
+    <h3>Rest timer</h3>
+    <p>Use this between sets to keep your workout consistent.</p>
+    <div class="timer">
+      <strong id="timerDisplay">01:30</strong>
+      <div>
+        <button onclick="startTimer(60)">60 sec</button>
+        <button onclick="startTimer(90)">90 sec</button>
+        <button onclick="startTimer(180)">3 min</button>
+      </div>
+    </div>
+    <button class="action secondary" onclick="stopTimer()" style="margin-top:12px">Stop timer</button>
+  </section>
+
+  <section class="note">
+    <h3>Recovery rules</h3>
+    <ul>
+      <li>Keep 2–3 good reps in reserve on most sets.</li>
+      <li>Rest 2–3 minutes for compound lifts.</li>
+      <li>Rest 60–90 seconds for isolation exercises.</li>
+      <li>Get enough sleep and protein.</li>
+      <li>Reduce training volume if fatigue builds up.</li>
+    </ul>
+  </section>
+
+  <section class="note">
+    <h3>Remember</h3>
+    <p>Progress doesn't mean lifting heavier every session. Good technique, consistency, and recovery are what make this a lifetime routine.</p>
+    <p>Day 7 is your full rest day.</p>
+  </section>
+</div>
+
+</main>
+
+<footer>
+  Lifetime Fitness · Your progress is saved on this device.
+</footer>
+
+<script>
+const workouts = [
+  {
+    title: "Chest & Triceps",
+    subtitle: "45–55 minutes · 4 exercises",
+    exercises: [
+      ["Barbell bench press", "3 sets × 6–10 reps"],
+      ["Incline dumbbell press", "3 sets × 8–12 reps"],
+      ["Cable chest fly", "2 sets × 12–15 reps"],
+      ["Triceps rope pushdown", "3 sets × 10–15 reps"]
+    ]
+  },
+  {
+    title: "Cardio & Abs",
+    subtitle: "Your existing cardio and abs routine",
+    exercises: [
+      ["Cardio", "Your preferred cardio routine"],
+      ["Abs", "Your preferred abs routine"]
+    ]
+  },
+  {
+    title: "Back & Biceps",
+    subtitle: "50–60 minutes · 5 exercises",
+    exercises: [
+      ["Lat pulldown", "3 sets × 8–12 reps"],
+      ["Seated cable row", "3 sets × 8–12 reps"],
+      ["One-arm dumbbell row", "2 sets × 10–12 reps per side"],
+      ["Dumbbell biceps curl", "3 sets × 10–12 reps"],
+      ["Hammer curl", "2 sets × 10–15 reps"]
+    ]
+  },
+  {
+    title: "Cardio & Abs",
+    subtitle: "Your existing cardio and abs routine",
+    exercises: [
+      ["Cardio", "Your preferred cardio routine"],
+      ["Abs", "Your preferred abs routine"]
+    ]
+  },
+  {
+    title: "Legs & Shoulders",
+    subtitle: "55–65 minutes · 6 exercises",
+    exercises: [
+      ["Barbell squat", "3 sets × 6–10 reps"],
+      ["Dumbbell Romanian deadlift", "3 sets × 8–12 reps"],
+      ["Leg curl machine", "2 sets × 10–15 reps"],
+      ["Calf raises", "2 sets × 12–20 reps"],
+      ["Seated dumbbell shoulder press", "3 sets × 8–12 reps"],
+      ["Dumbbell lateral raises", "3 sets × 12–15 reps"]
+    ]
+  },
+  {
+    title: "Cardio & Abs",
+    subtitle: "Your existing cardio and abs routine",
+    exercises: [
+      ["Cardio", "Your preferred cardio routine"],
+      ["Abs", "Your preferred abs routine"]
+    ]
+  },
+  {
+    title: "Full Rest Day",
+    subtitle: "Recover and get ready for the next week",
+    exercises: [
+      ["Rest and recovery", "No gym workout required"],
+      ["Optional light walking", "Only if you feel like it"]
+    ]
+  }
+];
+
+const dayNames = [
+  "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"
+];
+
+const dayShort = [
+  "Chest", "Cardio", "Back", "Cardio",
+  "Legs", "Cardio", "Rest"
+];
+
+let selectedDay = 0;
+let timerInterval = null;
+let remainingSeconds = 90;
+
+function getWeekKey() {
+  const now = new Date();
+  const date = new Date(now);
+  date.setDate(now.getDate() - ((now.getDay() + 6) % 7));
+  return date.getFullYear() + "-" +
+    String(date.getMonth() + 1).padStart(2, "0") + "-" +
+    String(date.getDate()).padStart(2, "0");
+}
+
+function getProgress() {
+  const key = "lifetime-fitness-" + getWeekKey();
+  return JSON.parse(localStorage.getItem(key) || "{}");
+}
+
+function saveProgress(data) {
+  const key = "lifetime-fitness-" + getWeekKey();
+  localStorage.setItem(key, JSON.stringify(data));
+}
+
+function renderWeek() {
+  const progress = getProgress();
+  const week = document.getElementById("week");
+  week.innerHTML = "";
+
+  workouts.forEach((workout, index) => {
+    const button = document.createElement("button");
+    button.className = "day-button";
+    if (selectedDay === index) button.classList.add("active");
+
+    const completed = progress[index + "-complete"] === true;
+    if (completed) button.classList.add("done");
+
+    button.innerHTML =
+      `<strong>${dayNames[index]}</strong><small>${dayShort[index]}</small>`;
+
+    button.onclick = () => {
+      selectedDay = index;
+      render();
+    };
+
+    week.appendChild(button);
+  });
+}
+
+function renderWorkout() {
+  const workout = workouts[selectedDay];
+  const progress = getProgress();
+
+  document.getElementById("dayNumber").textContent =
+    "DAY " + (selectedDay + 1);
+
+  document.getElementById("workoutTitle").textContent =
+    workout.title;
+
+  document.getElementById("workoutSubtitle").textContent =
+    workout.subtitle;
+
+  const list = document.getElementById("exerciseList");
+  list.innerHTML = "";
+
+  workout.exercises.forEach((exercise, index) => {
+    const key = selectedDay + "-" + index;
+    const checked = progress[key] === true;
+
+    const label = document.createElement("label");
+    label.className = "exercise";
+
+    label.innerHTML = `
+      <input type="checkbox" ${checked ? "checked" : ""}>
+      <div class="exercise-info">
+        <strong>${exercise[0]}</strong>
+        <small>${exercise[1]}</small>
+      </div>
+      <span class="sets">${checked ? "Done ✓" : "Exercise"}</span>
+    `;
+
+    label.querySelector("input").onchange = (event) => {
+      const updated = getProgress();
+      updated[key] = event.target.checked;
+      saveProgress(updated);
+      render();
+    };
+
+    list.appendChild(label);
+  });
+
+  const completedCount = workout.exercises.filter(
+    (_, index) => progress[selectedDay + "-" + index] === true
+  ).length;
+
+  const total = workout.exercises.length;
+  const percent = total ? (completedCount / total) * 100 : 0;
+
+  document.getElementById("progressText").textContent =
+    `${completedCount} of ${total} exercises completed`;
+
+  document.getElementById("progressFill").style.width =
+    percent + "%";
+
+  document.getElementById("completeButton").textContent =
+    progress[selectedDay + "-complete"]
+      ? "Workout completed ✓"
+      : "Complete workout";
+}
+
+
+function renderDailyRoutine() {
+  const list = document.getElementById("dailyList");
+  const progress = getProgress();
+
+  const exercises = [
+    "Pushups",
+    "Squats",
+    "Planks",
+    "Jumps",
+    "Dead hangs",
+    "Farmer's Walk",
+    "Kettlebell",
+    "ETC"
+  ];
+
+  list.innerHTML = "";
+
+  // Create a compact grid for the daily exercises
+  list.style.display = "grid";
+  list.style.gridTemplateColumns =
+    "repeat(auto-fit, minmax(140px, 1fr))";
+  list.style.gap = "10px";
+
+  exercises.forEach((exercise, index) => {
+    const key = "daily-" + index;
+    const checked = progress[key] === true;
+
+    const label = document.createElement("label");
+
+    label.style.display = "flex";
+    label.style.alignItems = "center";
+    label.style.gap = "10px";
+    label.style.padding = "12px";
+    label.style.background = "#242b25";
+    label.style.border = "1px solid #303a31";
+    label.style.borderRadius = "10px";
+    label.style.cursor = "pointer";
+    label.style.minWidth = "0";
+
+    label.innerHTML = `
+      <input
+        type="checkbox"
+        ${checked ? "checked" : ""}
+        style="width:18px;height:18px;flex-shrink:0;accent-color:#b7f36b;cursor:pointer;"
+      >
+
+      <div style="min-width:0;flex:1;">
+        <strong style="
+          display:block;
+          font-size:13px;
+          line-height:1.4;
+          overflow-wrap:anywhere;
+          color:${checked ? "#a2ada3" : "#f2f5ef"};
+          ${checked ? "text-decoration:line-through;" : ""}
+        ">${exercise}</strong>
+
+        <small style="
+          display:block;
+          font-size:11px;
+          color:#a2ada3;
+          margin-top:3px;
+        ">Daily routine</small>
+      </div>
+    `;
+
+    label.querySelector("input").onchange = (event) => {
+      const updated = getProgress();
+
+      updated[key] = event.target.checked;
+
+      saveProgress(updated);
+
+      renderDailyRoutine();
+    };
+
+    list.appendChild(label);
+  });
+}
+
+
+function render() {
+  renderWeek();
+  renderWorkout();
+  renderDailyRoutine();
+}
+
+document.getElementById("completeButton").onclick = () => {
+  const progress = getProgress();
+  progress[selectedDay + "-complete"] = true;
+  saveProgress(progress);
+  render();
+};
+
+document.getElementById("resetButton").onclick = () => {
+  const progress = getProgress();
+
+  workouts[selectedDay].exercises.forEach((_, index) => {
+    delete progress[selectedDay + "-" + index];
+  });
+
+  delete progress[selectedDay + "-complete"];
+  saveProgress(progress);
+  render();
+};
+
+function updateTimerDisplay() {
+  const minutes = Math.floor(remainingSeconds / 60);
+  const seconds = remainingSeconds % 60;
+
+  document.getElementById("timerDisplay").textContent =
+    String(minutes).padStart(2, "0") + ":" +
+    String(seconds).padStart(2, "0");
+}
+
+function startTimer(seconds) {
+  stopTimer();
+  remainingSeconds = seconds;
+  updateTimerDisplay();
+
+  timerInterval = setInterval(() => {
+    remainingSeconds--;
+    updateTimerDisplay();
+
+    if (remainingSeconds <= 0) {
+      stopTimer();
+      document.getElementById("timerDisplay").textContent = "Done!";
+    }
+  }, 1000);
+}
+
+function stopTimer() {
+  if (timerInterval) clearInterval(timerInterval);
+  timerInterval = null;
+}
+
+render();
+</script>
+
+</body>
+</html>
